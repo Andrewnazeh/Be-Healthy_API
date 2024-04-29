@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 
 const Food = require('../models/foodModel');
 const factory = require('./handlersFactory');
+const ApiError = require('../utils/apiError');
 
 
 
@@ -22,25 +23,18 @@ exports.getSpeceficFood = factory.getOne(Food);
 
 exports.getSearchedFood = asyncHandler(async (req, res, next) => {
     const keyword = { ...req.query };
-    let food;
-    
-    if (keyword.name===undefined && keyword.categoryId===undefined) {
-        return res.status(404).json({
+
+    const food = await Food.find({
+        name: new RegExp(keyword.name, 'i'),
+        categoryId: new RegExp(keyword.categoryId, 'i'),
+    });
+    if (food&&food.length === 0) {
+        return next(new ApiError('No food for this name', 404));
+    } else {
+        res.status(200).json({
             Result: food.length,
             success: true,
-            data:"no food found"
-        });
-    } else {
-         food = await Food.find({
-            name: new RegExp(keyword.name, 'i'),
-             categoryId: new RegExp(keyword.categoryId, 'i'),
+            data: food
         });
     }
-   
-res.status(200).json({
-    Result: food.length,
-    success: true,
-    data: food
-});
-
 });
