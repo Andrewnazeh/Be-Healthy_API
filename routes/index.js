@@ -4,7 +4,8 @@ const authRoute = require('./authRoute');
 const dataRoute= require('./dataRoute');
 const foodRoute= require('./foodRoute');
 const restaurantRoute= require('./restaurantRoute');
-const catFoodRoute= require('./categoryFoodRoute');
+const catFoodRoute = require('./categoryFoodRoute');
+const wishListRout=require('./wishListRout')
 
 const mountRoutes = (app) => {
   app.use('/api/v1/users', userRoute);
@@ -13,6 +14,8 @@ const mountRoutes = (app) => {
   app.use('/api/v1/food', foodRoute);
   app.use('/api/v1/restaurants', restaurantRoute);
   app.use('/api/v1/catFood', catFoodRoute);
+  app.use('/api/v1/wishlist', wishListRout);
+
 };
 
 
