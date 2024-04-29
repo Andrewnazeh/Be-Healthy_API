@@ -2,6 +2,8 @@ const express = require('express');
 const {
     collectDataValidator
 } = require('../validators/dataValidator');
+const { protect } = require('../services/authService')
+
 
 const {
     collectData,
@@ -11,9 +13,9 @@ const {
 
 const router = express.Router();
 
-router.post('/collectData',collectDataValidator , collectData);
-router.post('/addData/:id', addData);
-router.get('/getdata/:id', getData);
+router.post('/collectData',protect,collectDataValidator , collectData);
+router.post('/addData', protect, addData);
+router.get('/getdata',protect, getData);
 
 
 

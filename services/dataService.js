@@ -17,6 +17,7 @@ exports.collectData = asyncHandler(async (req, res, next) => {
         height,
         activity,
     } = req.body;
+
     if (gender === 'male') {
         BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
     } else {
@@ -26,13 +27,14 @@ exports.collectData = asyncHandler(async (req, res, next) => {
     const caloriesNeeded = BMR * activityList.get(activity);
 
     req.body.caloriesNeeded = Math.ceil(caloriesNeeded);
+    req.body.userId = req.user.id;
     const data = await Data.create(req.body);
     res.status(201).json({ data: data });
 });
 
 
 exports.addData = asyncHandler(async (req, res, next) => {
-    const data = await Data.findByIdAndUpdate(req.params.id);
+    const data = await Data.findOneAndUpdate({userId:req.user.id});
     data.caloriesAdded += parseFloat(req.body.caloriesAdded);
     data.stepsNumber += parseFloat(req.body.stepsNumber);
     data.waterQuantity += parseFloat(req.body.waterQuantity);
@@ -42,7 +44,7 @@ exports.addData = asyncHandler(async (req, res, next) => {
 
 
 exports.getData = asyncHandler(async (req, res, next) => {
-    const data = await Data.findById(req.params.id);
+    const data = await Data.findOne({userId:req.user.id}).populate('userId');
     res.status(200).json({ data: data });
 
 })

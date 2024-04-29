@@ -5,7 +5,7 @@ const foodSchema = new mongoose.Schema({
         type: String,
         required: [true, "name required"],
     },
-    category: {
+    categoryId: {
         type: String,
         required: [true, "category required"],
     },
