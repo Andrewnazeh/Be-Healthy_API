@@ -69,8 +69,7 @@ exports.getAll = (Model, modelName = '') =>
       .filter()
       .search(modelName)
       .limitFields()
-      .sort()
-      .populate();
+      .sort();
 
     // Execute query
     const { mongooseQuery, paginationResult } = apiFeatures;
