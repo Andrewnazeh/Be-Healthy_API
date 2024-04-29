@@ -34,7 +34,7 @@ exports.collectData = asyncHandler(async (req, res, next) => {
 
 
 exports.addData = asyncHandler(async (req, res, next) => {
-    const data = await Data.findOneAndUpdate({userId:req.user.id});
+    const data = await Data.findOne({userId:req.user.id}).populate('userId');
     data.caloriesAdded += parseFloat(req.body.caloriesAdded);
     data.stepsNumber += parseFloat(req.body.stepsNumber);
     data.waterQuantity += parseFloat(req.body.waterQuantity);
