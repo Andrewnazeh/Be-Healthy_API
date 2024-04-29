@@ -2,9 +2,7 @@ const asyncHandler = require('express-async-handler');
 
 
 const Food = require('../models/foodModel');
-const ApiError = require('../utils/apiError');
 const factory = require('./handlersFactory');
-const { Result } = require('express-validator');
 
 
 
@@ -25,8 +23,8 @@ exports.getSpeceficFood = factory.getOne(Food);
 exports.getSearchedFood = asyncHandler(async (req, res, next) => {
     const keyword = { ...req.query };
     let food;
-    console.log(keyword.name, keyword.category);
-    if (keyword.name===undefined && keyword.category===undefined) {
+    
+    if (keyword.name===undefined && keyword.categoryId===undefined) {
         return res.status(404).json({
             Result: food.length,
             success: true,
@@ -35,7 +33,7 @@ exports.getSearchedFood = asyncHandler(async (req, res, next) => {
     } else {
          food = await Food.find({
             name: new RegExp(keyword.name, 'i'),
-            category: new RegExp(keyword.category, 'i'),
+             categoryId: new RegExp(keyword.categoryId, 'i'),
         });
     }
    
