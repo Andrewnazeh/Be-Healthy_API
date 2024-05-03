@@ -3,8 +3,8 @@ const express = require('express');
 const authService = require('../services/authService');
 
 const {
-  addProductToWishlist,
-  removeProductFromWishlist,
+  addTrainingToWishlist,
+  removeTrainingFromWishlist,
   getLoggedUserWishlist,
 } = require('../services/wishlistService');
 
@@ -12,10 +12,10 @@ const router = express.Router();
 
 router.use(authService.protect, authService.allowedTo('user'));
 
-router.route('/').post(addProductToWishlist)
+router.route('/').post(addTrainingToWishlist)
       .get(getLoggedUserWishlist);
 
-router.delete('/:productId',
- removeProductFromWishlist);
+router.delete('/:TrainingId',
+ removeTrainingFromWishlist);
 
 module.exports = router;

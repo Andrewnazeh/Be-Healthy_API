@@ -39,18 +39,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    wishlist: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Trainning',
+      },
+    ],
+    
     // dataID:
     // {
     //   type: mongoose.Schema.ObjectId,
     //   ref: 'Data',
     // },
     // child reference (one to many)
-    wishlist: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Product',
-      },
-    ],
     // addresses: [
     //   {
     //     id: { type: mongoose.Schema.Types.ObjectId },
