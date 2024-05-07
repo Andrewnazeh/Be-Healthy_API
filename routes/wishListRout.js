@@ -13,9 +13,9 @@ const router = express.Router();
 router.use(authService.protect, authService.allowedTo('user'));
 
 router.route('/').post(addTrainingToWishlist)
-      .get(getLoggedUserWishlist);
+  .get(getLoggedUserWishlist);
 
-router.delete('/:TrainingId',
- removeTrainingFromWishlist);
+router.delete('/:trainingId',
+  removeTrainingFromWishlist);
 
 module.exports = router;
