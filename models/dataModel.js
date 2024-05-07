@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
     userId:
-    {   type: mongoose.Schema.ObjectId,
+    {
+        type: mongoose.Schema.ObjectId,
         ref: 'User',
     },
     gender: {
@@ -33,7 +34,7 @@ const dataSchema = new mongoose.Schema({
     },
     caloriesNeeded: {
         type: Number,
-        default:0
+        default: 0
     },
 
     caloriesAdded: {
@@ -43,15 +44,19 @@ const dataSchema = new mongoose.Schema({
     stepsNumber: {
         type: Number,
         default: 0
-    },    
+    },
+    waterNeeded: {
+        type: Number,
+        default: 0
+    },
     waterQuantity: {
         type: Number,
         default: 0
     },
-
+    timeChangedData: Date,
 
 }, { timestamps: true }
-); 
+);
 
 const Data = mongoose.model('Data', dataSchema);
 
