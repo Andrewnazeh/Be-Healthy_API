@@ -45,7 +45,10 @@ const userSchema = new mongoose.Schema(
         ref: 'Trainning',
       },
     ],
-    
+    haveData: {
+      type: Boolean,
+      default: false,
+    },
     // dataID:
     // {
     //   type: mongoose.Schema.ObjectId,

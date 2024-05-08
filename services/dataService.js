@@ -1,6 +1,7 @@
 
 
 const Data = require('../models/dataModel');
+const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
 
 exports.collectData = asyncHandler(async (req, res, next) => {
@@ -28,6 +29,7 @@ exports.collectData = asyncHandler(async (req, res, next) => {
     req.body.caloriesNeeded = Math.ceil(caloriesNeeded);
     req.body.waterNeeded = parseFloat(waterNeeded.toFixed(1));
     req.body.userId = req.user.id;
+    await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true });
     const data = await Data.create(req.body);
     res.status(201).json({ data: data });
 });
@@ -40,22 +42,42 @@ exports.addData = asyncHandler(async (req, res, next) => {
     data.waterQuantity += parseFloat(req.body.waterQuantity);
     await data.save();
 
-    setInterval(async()=>{
-        data.caloriesAdded = 0,
-        data.stepsNumber = 0,
-        data.waterQuantity = 0
-        await data.save();
-    }
-        , 24 * 60 * 60 * 1000); // 24 hours in milliseconds
-
-    // if ((data.timeChangedData)===Date.now()) {
-    //     data.caloriesAdded = 0;
-    //     data.stepsNumber = 0;
-    //     data.waterQuantity = 0;
-    //     data.timeChangedData = Date.now();
+    // setInterval(async()=>{
+    //     data.caloriesAdded = 0,
+    //     data.stepsNumber = 0,
+    //     data.waterQuantity = 0
     //     await data.save();
     // }
-    res.status(201).json({ data: data });
+    //     , 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+
+    // Function to calculate milliseconds until next midnight
+    // function msUntilMidnight() {
+    //     const now = new Date();
+    //     const midnight = new Date(now);
+    //     midnight.setHours(24, 0, 0, 0);
+    //     return midnight - now;
+    // }
+
+    // // Function to update the field
+    // async function updateField(data) {
+    //         data.caloriesAdded = 0,
+    //         data.stepsNumber = 0,
+    //         data.waterQuantity = 0
+    //         await data.save();
+    //     }
+
+    // // Function to update the field at midnight and schedule it to run again every 24 hours
+    // function updateAtMidnight() {
+    //     setTimeout(() => {
+    //         updateField(data);
+    //         setInterval(updateField(data), 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+    //     }, msUntilMidnight());
+    // }
+
+    // // Start updating at midnight
+    // updateAtMidnight();
+    res.status(200).json({ data: data });
 });
 
 
