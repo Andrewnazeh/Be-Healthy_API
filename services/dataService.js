@@ -1,88 +1,63 @@
-
+const cron=require('node-cron');
 
 const Data = require('../models/dataModel');
 const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
 
 exports.collectData = asyncHandler(async (req, res, next) => {
-    let BMR;
-    const activityList = new Map();
+    
+    const user = await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true }, { new: true });
 
-    activityList.set('low', 1.2);
-    activityList.set('medium', 1.55);
-    activityList.set('high', 1.72);
-    const {
-        age,
-        gender,
-        weight,
-        height,
-        activity,
-    } = req.body;
-
-    if (gender === 'male') {
-        BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-    } else {
-        BMR = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    if (!user) {
+        return next(new ApiError(`No user found`, 404));
+    } else if (user.haveData) {
+        return (
+            res.status(409).json({ message: 'Data Already Created' })
+        )
     }
-    const caloriesNeeded = BMR * activityList.get(activity);
-    const waterNeeded = 0.035 * weight;
-    req.body.caloriesNeeded = Math.ceil(caloriesNeeded);
-    req.body.waterNeeded = parseFloat(waterNeeded.toFixed(1));
-    req.body.userId = req.user.id;
-    await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true });
-    const data = await Data.create(req.body);
-    res.status(201).json({ data: data });
+    else {
+        const data = await Data.create(req.body);
+        res.status(201).json({ data: data });
+    }
 });
 
 
 exports.addData = asyncHandler(async (req, res, next) => {
-    const data = await Data.findOne({userId:req.user.id}).populate('userId');
-    data.caloriesAdded += parseFloat(req.body.caloriesAdded);
-    data.stepsNumber += parseFloat(req.body.stepsNumber);
-    data.waterQuantity += parseFloat(req.body.waterQuantity);
+    const data = await Data.findOne({ userId: req.user.id }).populate('userId');
+    const { caloriesAdded=0, stepsNumber=0, waterQuantity=0 } = req.body;
+    data.caloriesAdded += parseFloat(caloriesAdded);
+    data.stepsNumber += parseFloat(stepsNumber);
+    data.waterQuantity += parseFloat(waterQuantity);
     await data.save();
 
-    // setInterval(async()=>{
-    //     data.caloriesAdded = 0,
-    //     data.stepsNumber = 0,
-    //     data.waterQuantity = 0
-    //     await data.save();
-    // }
-    //     , 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+    // Function to reset the variables to 0
+    resetVariables = async () => {
+        const data = await Data.findOne({ userId: req.user.id });
+        data.caloriesAdded = 0;
+        data.stepsNumber = 0;
+        data.waterQuantity = 0;
+        await data.save();
+    }
 
-
-    // Function to calculate milliseconds until next midnight
-    // function msUntilMidnight() {
-    //     const now = new Date();
-    //     const midnight = new Date(now);
-    //     midnight.setHours(24, 0, 0, 0);
-    //     return midnight - now;
-    // }
-
-    // // Function to update the field
-    // async function updateField(data) {
-    //         data.caloriesAdded = 0,
-    //         data.stepsNumber = 0,
-    //         data.waterQuantity = 0
-    //         await data.save();
-    //     }
-
-    // // Function to update the field at midnight and schedule it to run again every 24 hours
-    // function updateAtMidnight() {
-    //     setTimeout(() => {
-    //         updateField(data);
-    //         setInterval(updateField(data), 24 * 60 * 60 * 1000); // 24 hours in milliseconds
-    //     }, msUntilMidnight());
-    // }
-
-    // // Start updating at midnight
-    // updateAtMidnight();
-    res.status(200).json({ data: data });
+    // Schedule the task to run every 24 hours
+    cron.schedule('0 0 * * *', () => {
+        console.log('Running update task...');
+        resetVariables();
+    });
+    res.status(200).json({ data });
 });
 
 
+
+
 exports.getData = asyncHandler(async (req, res, next) => {
-    const data = await Data.findOne({userId:req.user.id}).populate('userId');
+    const data = await Data.findOne({ userId: req.user.id }).populate('userId');
     res.status(200).json({ data: data });
 
 })
+
+exports.updateData = asyncHandler(async (req, res) => {
+    const data = await Data.findOneAndUpdate({ userId: req.user.id }, req.body, { new: true });
+    res.status(200).json(data);
+
+});
