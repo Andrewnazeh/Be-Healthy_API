@@ -25,7 +25,7 @@ const processingData = asyncHandler( (req, res, next) => {
     const caloriesNeeded = BMR * activityList.get(activity);
     const waterNeeded = 0.035 * weight;
     req.body.caloriesNeeded = Math.ceil(caloriesNeeded);
-    req.body.waterNeeded = parseFloat(waterNeeded.toFixed(1));
+    req.body.waterNeeded = parseFloat(waterNeeded.toFixed(1)*1000);
     req.body.userId = req.user.id;
     next();
     

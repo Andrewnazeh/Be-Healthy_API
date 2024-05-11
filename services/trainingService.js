@@ -5,7 +5,7 @@ exports.getTrainings = asyncHandler(async (req, res, next) => {
     
     const keyword = { ...req.query };
     console.log(keyword);
-    const trainings = await Training.findOne( keyword ).select(['name','image']);
+    const trainings = await Training.find( keyword ).select(['name','image']);
 
     res.status(200).json({
         success: true,
