@@ -7,6 +7,7 @@ const restaurantRoute= require('./restaurantRoute');
 const catFoodRoute = require('./categoryFoodRoute');
 const wishListRoute=require('./wishListRout')
 const trainingRoute=require('./trainingRoute')
+const reviewRoute=require('./reviewRoute')
 
 const mountRoutes = (app) => {
   app.use('/api/v1/users', userRoute);
@@ -17,6 +18,7 @@ const mountRoutes = (app) => {
   app.use('/api/v1/catFood', catFoodRoute);
   app.use('/api/v1/wishlist', wishListRoute);
   app.use('/api/v1/training', trainingRoute);
+  app.use('/api/v1/reviews', reviewRoute);
 
 };
 

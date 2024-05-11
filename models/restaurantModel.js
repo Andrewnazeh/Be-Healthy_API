@@ -3,25 +3,50 @@ const mongoose = require("mongoose");
 const restaurantSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true,"name required"],
+        required: [true, "name required"],
     },
     image: {
         type: String,
-        required: [true,"image required"],
+        required: [true, "image required"],
     },
     description: {
         type: String,
-        required: [true,"description required"],
+        required: [true, "description required"],
     },
     rate: {
         type: Number,
-        required: [true,"rate required"],
+        required: [true, "rate required"],
     },
     link: {
         type: String,
-        required: [true,"link required"],
+        required: [true, "link required"],
     },
+    ratingsAverage: {
+        type: Number,
+        min: [1, 'Rating must be above or equal 1.0'],
+        max: [5, 'Rating must be below or equal 5.0'],
+        // set: (val) => Math.round(val * 10) / 10, // 3.3333 * 10 => 33.333 => 33 => 3.3
+    },
+    ratingsQuantity: {
+        type: Number,
+        default: 0,
+    },
+},
+    {
+
+        timestamps: true,
+        // to enable virtual populate
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
+);
+
+restaurantSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'Restaurant',
+    localField: '_id',
 });
+
 const setImageURL = (doc) => {
     if (doc.image) {
         const imageUrl = `${process.env.BASE_URL}/restaurants/${doc.image}`;
