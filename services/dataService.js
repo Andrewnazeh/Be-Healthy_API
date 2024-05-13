@@ -6,7 +6,7 @@ const asyncHandler = require('express-async-handler');
 
 exports.collectData = asyncHandler(async (req, res, next) => {
     
-    const user = await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true }, { new: true });
+    const user = await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true });
 
     if (!user) {
         return next(new ApiError(`No user found`, 404));
