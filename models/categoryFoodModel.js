@@ -15,13 +15,13 @@ const catFoodSchema = new mongoose.Schema({
 
 const setImageURL = (doc) => {
     if (doc.image) {
-        const imageUrl = `${process.env.BASE_URL}/categoryfoods/${doc.image}`;
+        const imageUrl = `${process.env.BASE_URL}/categoryFoods/${doc.image}`;
         doc.image = imageUrl;
     }
     if (doc.images) {
         const imagesList = [];
         doc.images.forEach((image) => {
-            const imageUrl = `${process.env.BASE_URL}/categoryfoods/${image}`;
+            const imageUrl = `${process.env.BASE_URL}/categoryFoods/${image}`;
             imagesList.push(imageUrl);
         });
         doc.images = imagesList;
