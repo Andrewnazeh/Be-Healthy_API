@@ -1,11 +1,11 @@
-const cron=require('node-cron');
+const cron = require('node-cron');
 
 const Data = require('../models/dataModel');
 const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
 
 exports.collectData = asyncHandler(async (req, res, next) => {
-    
+
     const user = await User.findByIdAndUpdate({ _id: req.body.userId }, { haveData: true });
 
     if (!user) {
@@ -24,7 +24,7 @@ exports.collectData = asyncHandler(async (req, res, next) => {
 
 exports.addData = asyncHandler(async (req, res, next) => {
     const data = await Data.findOne({ userId: req.user.id }).populate('userId');
-    const { caloriesAdded=0, stepsNumber=0, waterQuantity=0 } = req.body;
+    const { caloriesAdded = 0, stepsNumber = 0, waterQuantity = 0 } = req.body;
     data.caloriesAdded += parseFloat(caloriesAdded);
     data.stepsNumber += parseFloat(stepsNumber);
     data.waterQuantity += parseFloat(waterQuantity);
@@ -43,6 +43,8 @@ exports.addData = asyncHandler(async (req, res, next) => {
     cron.schedule('0 0 * * *', () => {
         console.log('Running update task...');
         resetVariables();
+    }, {
+        timezone: 'Africa/Cairo'
     });
     res.status(200).json({ data });
 });
