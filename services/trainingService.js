@@ -22,3 +22,13 @@ exports.getSpecificTraining = asyncHandler(async (req, res, next) => {
         data: training
     });
 });
+
+exports.getTrainingFromPouplar = asyncHandler(async (req, res) => {
+    const randomTraining = await Training.aggregate([{ $sample: { size: 5 } },{ "$project": {   _id: 1, "name": 1, "image": 1 ,"category":1} } ]);
+    
+
+    res.status(200).json({
+        success: true,
+        data: randomTraining
+    });
+})
