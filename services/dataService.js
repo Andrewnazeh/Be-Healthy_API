@@ -40,7 +40,7 @@ exports.addData = asyncHandler(async (req, res, next) => {
     }
 
     // Schedule the task to run every 24 hours
-    cron.schedule('0 0 * * *', () => {
+    cron.schedule('* * * * *', () => {
         console.log('Running update task...');
         resetVariables();
     }, {
