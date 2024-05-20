@@ -49,6 +49,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    feedbacks: [
+      { type: String, }
+    ]
     // dataID:
     // {
     //   type: mongoose.Schema.ObjectId,

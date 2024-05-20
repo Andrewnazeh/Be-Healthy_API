@@ -2,7 +2,7 @@ const express = require('express');
 const {
     collectDataValidator
 } = require('../validators/dataValidator');
-const { protect } = require('../services/authService')
+const { protect } = require('../services/authService');
 
 const processingData = require('../middlewares/processingDataMiddleware');
 
