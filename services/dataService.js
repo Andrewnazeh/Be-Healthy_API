@@ -32,7 +32,7 @@ exports.addData = asyncHandler(async (req, res, next) => {
 
     // Function to reset the variables to 0
     resetVariables = async () => {
-        const data = await Data.findOne({ userId: req.user.id });
+        const data = await Data.find({ userId: req.user.id });
         data.caloriesAdded = 0;
         data.stepsNumber = 0;
         data.waterQuantity = 0;
