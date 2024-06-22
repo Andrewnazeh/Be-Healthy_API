@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit');
 const hpp = require('hpp');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require("helmet");
+const { I18n, getLocale } = require('i18n')
 
 dotenv.config({ path: 'config.env' });
 const ApiError = require('./utils/apiError');
@@ -22,6 +23,76 @@ dbConnection();
 
 // express app
 const app = express();
+
+
+//support arabic and english language
+//configration i18n
+const i18n = new I18n({
+  locales: ['en', "ar"],
+  directory: path.join('./', 'locales'),
+  defaultLocale: 'en',
+  header: 'lang',
+  cookie:'lang',
+  queryParameter: 'lang',
+  autoReload: true,
+  updateFiles: false,
+  syncFiles: true
+});
+
+
+// Initialize i18n
+app.use(i18n.init, (req, res, next) => {
+  const lang = req.query.lang ||req.headers.lang|| 'en';
+  req.setLocale(lang);
+  next();
+})
+
+
+
+// const socketIo = require('socket.io');
+// const server = require('http').createServer(app);
+// const io = socketIo(server);
+
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
+
+//   // Emit a welcome message when a client connects
+//   socket.emit('message', 'Welcome to the WebSocket server!');
+
+//   // Handle a client message
+//   socket.on('sendNotification', (data) => {
+//     console.log('Notification received: ', data);
+//     // Broadcast the notification to all connected clients
+//     io.emit('notification', data);
+//   });
+
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+// });
+
+// const changeStream = collection.watch();
+
+// // Listen for change events
+// changeStream.on('change', (change) => {
+//   console.log('Change detected:', change);
+
+//   // Perform your trigger action here
+//   if (change.operationType === 'insert') {
+//     console.log('Document inserted:', change.fullDocument);
+//     // Add your logic here for insert events
+//   } else if (change.operationType === 'update') {
+//     console.log('Document updated:', change.updateDescription);
+//     // Add your logic here for update events
+//   } else if (change.operationType === 'replace') {
+//     console.log('Document replaced:', change.fullDocument);
+//     // Add your logic here for replace events
+//   } else if (change.operationType === 'delete') {
+//     console.log('Document deleted:', change.documentKey);
+//     // Add your logic here for delete events
+//   }
+
+// });
 
 // Enable other domains to access your application
 app.use(cors());
