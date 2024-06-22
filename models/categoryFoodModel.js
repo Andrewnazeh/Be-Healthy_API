@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const catFoodSchema = new mongoose.Schema({
     name: {
-        type: String,
+        type: Object,
         required: [true, "name required"],
     },
     image: {
