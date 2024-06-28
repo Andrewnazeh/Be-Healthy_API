@@ -48,6 +48,12 @@ app.use(i18n.init, (req, res, next) => {
 })
 
 
+// const translatedResults = catFoods.map(item => {
+//     item.name = req.__(item.name); // Translate the name field
+//     return item;
+// });
+// var language = req.getlocale();
+
 
 // const socketIo = require('socket.io');
 // const server = require('http').createServer(app);

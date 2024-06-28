@@ -10,7 +10,7 @@ const restaurantSchema = new mongoose.Schema({
         required: [true, "image required"],
     },
     description: {
-        type: String,
+        type: Object,
         required: [true, "description required"],
     },
     rate: {
