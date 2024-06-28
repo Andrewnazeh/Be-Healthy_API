@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const trainingSchema = new mongoose.Schema({
     name: {
-        type: String,
+        type: Object,
         required: [true, "name required"],
     },
     image: {
@@ -11,7 +11,7 @@ const trainingSchema = new mongoose.Schema({
         required: [true, "image required"],
     },
     description: {
-        type: String,
+        type: Object,
         required: [true, "description required"],
     },
     link: {
@@ -19,13 +19,13 @@ const trainingSchema = new mongoose.Schema({
         required: [true, "link required"],
     },
     category: {
-        type: String,
-        enum:['strength','stretching','cardio','yoga'],
+        type: Object,
+        enum: ['strength', 'stretching', 'cardio', 'yoga', 'قوة', 'الاطالة', 'اليوغا','كارديو'],
         required: [true, "category required"],
     },
     level: {
-        type: String,
-        enum: ['beginner', 'advanced'],
+        type: Object,
+        enum: ['beginner', 'advanced', 'متقدم','مبتدئ'],
         required: [true, "level required"],
     }
 });

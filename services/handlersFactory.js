@@ -53,7 +53,18 @@ exports.getOne = (Model, populationOpt) =>
     if (!document) {
       return next(new ApiError(`No document for this id ${id}`, 404));
     }
-    res.status(200).json({ data: document });
+    if (req.headers.lang) {
+      const translatedDocument = {
+        _id: document._id,
+        name: document.name[req.getLocale()],
+        calorie: document.calorie,
+        categoryId: document.categoryId
+      };
+      res.status(200).json({ data: translatedDocument });
+    } else {
+      res.status(200).json({ data: document });
+    }
+    
   });
 
 exports.getAll = (Model, modelName = '') =>
