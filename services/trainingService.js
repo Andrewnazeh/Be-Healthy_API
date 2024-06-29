@@ -4,54 +4,43 @@ const Training = require('../models/trainingModel');
 
 exports.getTrainings = asyncHandler(async (req, res, next) => {
 
-    const keyword = { ...req.query };
-    
-    // const { category, level } = req.query;
-    // console.log(category);
-    //     let query = {};
+    const { category, level } = req.query;
+    let query = {};
 
-    //     // Build the query object based on provided search terms
-    //     if (category || level) {
-    //         const conditions = [];
-    //         if (category) {
-    //             conditions.push(
-    //                 { 'level.en': keyword.level },
-    //                 { 'level.ar': keyword.level },
-    //                 { 'category.en': keyword.category },
-    //                 { 'category.ar': keyword.category },
-    //             );
-    //         }
-    //         if (level) {
-    //             // const regex2 = new RegExp(search2, 'i'); // Case-insensitive regex
-    //             conditions.push(
-    //                 { 'level.en': keyword.level },
-    //                 { 'level.ar': keyword.level },
-    //                 { 'category.en': keyword.category },
-    //                 { 'category.ar': keyword.category },
-    //             );
-    //         }
-    //         query = { $and: conditions };
-    //     }
-    const query = {
-        '$and':[
+    // Build the query object based on provided search terms
+    if (category && level) {
+        const conditions = [];
+        if (req.getLocale() === 'en') {
+            conditions.push(
+                { 'level.en': level },
+                { 'category.en': category },
+            );
+        } else {
+            conditions.push(
+                { 'category.ar': category },
+                { 'level.ar': level }
+            );
+        }
 
-           { '$or': [
-                { 'level.en': keyword.level },
-                { 'level.ar': keyword.level },
+        query = { $and: conditions };
+    } else if (category || level) {
+        const conditions = [];
+        if (category) {
+            conditions.push(
+                { 'category.en': category },
+                { 'category.ar': category },
+            );
+        }
+        if (level) {
+            conditions.push(
+                { 'level.en': level },
+                { 'level.ar': level },
 
-            ]},
-           { '$or': [
-                { 'category.en': keyword.category },
-                { 'category.ar': keyword.category },
-
-            ]}
-        ]
-                
-                
-    };
-
-
-    const trainings = await Training.find(query).select(['name', 'image']);
+            );
+        }
+        query = { $or: conditions };
+    }
+    const trainings = await Training.find((!category && !level) ? {} : query).select(['name', 'image']);
     const translatedTrainings = trainings.map(items => {
         return {
             _id: items._id,
@@ -73,16 +62,16 @@ exports.getSpecificTraining = asyncHandler(async (req, res, next) => {
     if (!training) {
         return next(new ApiError(`No training for this id ${req.params.id}`, 404));
     }
-  
-      const translatedTraining = {
+
+    const translatedTraining = {
         _id: training._id,
         name: training.name[req.getLocale()],
-        description:training.description? training.description[req.getLocale()]: null,
-        level:training.level? training.level[req.getLocale()]: null,
+        description: training.description ? training.description[req.getLocale()] : null,
+        level: training.level ? training.level[req.getLocale()] : null,
         image: training.image,
         link: training.link,
         category: training.category[req.getLocale()]
-    }   
+    }
     res.status(200).json({
         success: true,
         data: translatedTraining
@@ -121,20 +110,20 @@ exports.getallTrainings = asyncHandler(async (req, res) => {
             image: items.image
         }
     })
-    
+
 
     res.status(200).json({
         success: true,
         data: translatedTrainings
 
-});
+    });
 })
 
 exports.getMeditation = asyncHandler(async (req, res) => {
 
     const meditations = await Training.find({
         '$or': [{ 'category.en': 'Meditation' },
-                { 'category.ar': 'تامل' }]
+        { 'category.ar': 'تامل' }]
     }).select(['name', 'image', 'link']);
 
     const translatedMeditations = meditations.map(items => {
@@ -151,5 +140,5 @@ exports.getMeditation = asyncHandler(async (req, res) => {
         data: translatedMeditations
 
     });
-    
+
 })
