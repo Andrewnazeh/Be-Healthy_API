@@ -5,7 +5,34 @@ const Training = require('../models/trainingModel');
 exports.getTrainings = asyncHandler(async (req, res, next) => {
 
     const keyword = { ...req.query };
-    const quary = {
+    
+    // const { category, level } = req.query;
+    // console.log(category);
+    //     let query = {};
+
+    //     // Build the query object based on provided search terms
+    //     if (category || level) {
+    //         const conditions = [];
+    //         if (category) {
+    //             conditions.push(
+    //                 { 'level.en': keyword.level },
+    //                 { 'level.ar': keyword.level },
+    //                 { 'category.en': keyword.category },
+    //                 { 'category.ar': keyword.category },
+    //             );
+    //         }
+    //         if (level) {
+    //             // const regex2 = new RegExp(search2, 'i'); // Case-insensitive regex
+    //             conditions.push(
+    //                 { 'level.en': keyword.level },
+    //                 { 'level.ar': keyword.level },
+    //                 { 'category.en': keyword.category },
+    //                 { 'category.ar': keyword.category },
+    //             );
+    //         }
+    //         query = { $and: conditions };
+    //     }
+    const query = {
         '$and':[
 
            { '$or': [
@@ -24,7 +51,7 @@ exports.getTrainings = asyncHandler(async (req, res, next) => {
     };
 
 
-    const trainings = await Training.find(quary).select(['name', 'image']);
+    const trainings = await Training.find(query).select(['name', 'image']);
     const translatedTrainings = trainings.map(items => {
         return {
             _id: items._id,
@@ -43,16 +70,19 @@ exports.getTrainings = asyncHandler(async (req, res, next) => {
 exports.getSpecificTraining = asyncHandler(async (req, res, next) => {
 
     const training = await Training.findById(req.params.id);
-    const translatedTraining = {
+    if (!training) {
+        return next(new ApiError(`No training for this id ${req.params.id}`, 404));
+    }
+  
+      const translatedTraining = {
         _id: training._id,
         name: training.name[req.getLocale()],
-        description: training.description[req.getLocale()],
+        description:training.description? training.description[req.getLocale()]: null,
+        level:training.level? training.level[req.getLocale()]: null,
         image: training.image,
         link: training.link,
-        category: training.category[req.getLocale()],
-        level: training.level[req.getLocale()]
-    }
-
+        category: training.category[req.getLocale()]
+    }   
     res.status(200).json({
         success: true,
         data: translatedTraining

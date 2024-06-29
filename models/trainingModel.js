@@ -20,7 +20,7 @@ const trainingSchema = new mongoose.Schema({
     },
     category: {
         type: Object,
-        enum: ['strength', 'stretching', 'cardio', 'yoga', 'قوة', 'الاطالة', 'اليوغا','كارديو'],
+        enum: ['strength', 'stretching', 'cardio', 'yoga', 'تمارين اليوغا', 'تمارين كارديو', 'تمارين الاطالة', 'تمارين قوة'],
         required: [true, "category required"],
     },
     level: {
