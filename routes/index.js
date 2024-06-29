@@ -19,6 +19,7 @@ const mountRoutes = (app) => {
   app.use('/api/v1/catFood', catFoodRoute);
   app.use('/api/v1/wishlist', wishListRoute);
   app.use('/api/v1/training', trainingRoute);
+  app.use('/api/v1/reviews', reviewRoute);
   app.use('/api/v1/feedback', feedbackRoute);
 
 };

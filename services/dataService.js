@@ -32,11 +32,14 @@ exports.addData = asyncHandler(async (req, res, next) => {
 
     // Function to reset the variables to 0
     resetVariables = async () => {
-        const data = await Data.find({ userId: req.user.id });
-        data.caloriesAdded = 0;
-        data.stepsNumber = 0;
-        data.waterQuantity = 0;
-        await data.save();
+        await Data.updateMany({},
+            {
+                $set: {
+                    caloriesAdded: 0,
+                    stepsNumber: 0,
+                    waterQuantity: 0
+                }
+            });
     }
 
     // Schedule the task to run every 24 hours
@@ -46,6 +49,7 @@ exports.addData = asyncHandler(async (req, res, next) => {
     }, {
         timezone: 'Africa/Cairo'
     });
+
     res.status(200).json({ data });
 });
 
