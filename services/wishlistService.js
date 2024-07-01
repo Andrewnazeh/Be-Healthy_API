@@ -49,7 +49,7 @@ exports.getLoggedUserWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id).populate('wishlist');
   const translatedTraining = user.wishlist.map(item => {
     return {
-      _id: user.wishlist._id,
+      _id: item._id,
       name: item.name[req.getLocale()],
       description: item.description[req.getLocale()],
       level: item.level[req.getLocale()],
