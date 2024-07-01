@@ -47,10 +47,20 @@ exports.removeTrainingFromWishlist = asyncHandler(async (req, res, next) => {
 // @access  Protected/User
 exports.getLoggedUserWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id).populate('wishlist');
-
+  const translatedTraining = user.wishlist.map(item => {
+    return {
+      _id: user.wishlist._id,
+      name: item.name[req.getLocale()],
+      description: item.description[req.getLocale()],
+      level: item.level[req.getLocale()],
+      image: item.image,
+      link: item.link,
+      category: item.category[req.getLocale()]
+    }
+  });
   res.status(200).json({
     status: 'success',
     results: user.wishlist.length,
-    data: user.wishlist,
+    data: translatedTraining,
   });
 });
