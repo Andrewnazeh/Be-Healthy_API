@@ -11,7 +11,7 @@ const ApiError = require('../utils/apiError');
 // @route   GET /api/v1/foods
 // @access  Public
 exports.getFoods = asyncHandler(async (req, res) => {
-    const foods = await Food.find({});
+    const foods = await Food.find({ categoryId: req.query.categoryId});
     if (!foods) {
         return next(new ApiError('No food found', 404));
     }
